@@ -9,9 +9,11 @@ import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
+import numpy as np
 
 from rag.logger import log_security_event
 from rag.retrieve import RetrievedPassage
+from rag.index import embed_texts
 
 # =========================================================================
 # Enums & data models
@@ -116,24 +118,31 @@ def _redact_pii(query: str) -> str:
 # 3. DOMAIN ENFORCEMENT
 # =========================================================================
 
-_DOMAIN_KEYWORDS: list[str] = [
-    "electric", "grid", "power", "voltage", "transformer", "cable",
-    "substation", "safety", "maintenance", "outage", "fault", "relay",
-    "circuit", "breaker", "distribution", "transmission", "insulation",
-    "grounding", "earthing", "load", "switchgear", "overhead", "conductor",
-    "utility", "compliance", "inspection", "clearance", "arc flash",
-    "lockout", "tagout", "ppe", "hazard", "regulation", "pole",
-    "energy", "wiring", "current", "amp", "ohm", "resistance",
-    "kilowatt", "megawatt", "feeder", "capacitor", "inverter", "solar",
-    "battery", "generator", "diesel", "backup", "scada", "meter",
-    "lineman", "crew", "storm", "restoration", "vegetation", "tree",
-    "trimming", "right.of.way", "easement", "permit",
-]
+_DOMAIN_ANCHOR_TEXT = (
+    "electricity grid operations power distribution high voltage transmission lines "
+    "substation maintenance electrical safety arc flash ppe lockout tagout circuits "
+    "breakers transformers utility lineman restoration outage fault generator "
+    "switchgear solar clearance grounding"
+)
 
+_domain_anchor_vec = None
 
-def _is_on_domain(query: str) -> bool:
-    q_lower = query.lower()
-    return any(kw in q_lower for kw in _DOMAIN_KEYWORDS)
+def _is_on_domain(query: str, threshold: float = 0.20) -> bool:
+    """Check if query is semantically similar to the grid domain anchor text."""
+    global _domain_anchor_vec
+    
+    if _domain_anchor_vec is None:
+        # Lazy load and normalise the anchor text vector
+        vec = embed_texts([_DOMAIN_ANCHOR_TEXT])
+        _domain_anchor_vec = vec / np.linalg.norm(vec, axis=1, keepdims=True)
+
+    # Embed and normalise the user query
+    query_vec = embed_texts([query])
+    query_vec = query_vec / np.linalg.norm(query_vec, axis=1, keepdims=True)
+
+    # Compute cosine similarity
+    similarity = float(np.dot(_domain_anchor_vec, query_vec.T)[0][0])
+    return similarity >= threshold
 
 
 # =========================================================================
