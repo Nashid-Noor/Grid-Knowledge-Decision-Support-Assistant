@@ -19,7 +19,7 @@ from rag.retrieve import RetrievedPassage
 # Configuration
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL = "gemini-1.5-flash"
+DEFAULT_MODEL = "gemini-2.5-flash"
 TEMPERATURE = 0.1
 MAX_OUTPUT_TOKENS = 1024
 
