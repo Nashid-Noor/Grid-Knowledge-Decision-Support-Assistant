@@ -1,3 +1,13 @@
+---
+title: Grid QA Assistant
+emoji: ⚡
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: 5.9.1
+app_file: app.py
+pinned: false
+---
 # ⚡ Grid Knowledge & Decision Support Assistant
 
 A production-structured Retrieval-Augmented Generation (RAG) system for electricity distribution operations, safety, and maintenance guidance.
