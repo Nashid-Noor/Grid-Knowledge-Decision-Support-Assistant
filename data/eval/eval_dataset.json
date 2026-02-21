@@ -1,0 +1,330 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-01-01",
+    "description": "Evaluation QA pairs for Grid Knowledge RAG. Each entry has a question, expected answer keywords, expected source files, and domain tags. Populate expected_source_files after ingesting your documents.",
+    "usage": "python -m rag.evaluation --dataset data/eval/eval_dataset.json"
+  },
+  "qa_pairs": [
+    {
+      "id": "EVAL-001",
+      "question": "What PPE is required when working on energised equipment above 600V?",
+      "expected_keywords": ["arc flash", "gloves", "face shield", "FR clothing", "rated"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-002",
+      "question": "What is the minimum approach distance for a 13.2kV overhead line?",
+      "expected_keywords": ["approach distance", "feet", "metres", "qualified"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-003",
+      "question": "Describe the lockout/tagout procedure for de-energising a transformer.",
+      "expected_keywords": ["lockout", "tagout", "isolate", "verify", "de-energise", "grounding"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-004",
+      "question": "What are the inspection intervals for distribution pole-mounted transformers?",
+      "expected_keywords": ["inspection", "interval", "years", "visual", "thermographic"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-005",
+      "question": "How should dissolved gas analysis results be interpreted for transformer oil?",
+      "expected_keywords": ["dissolved gas", "DGA", "hydrogen", "acetylene", "ethylene", "fault"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-006",
+      "question": "What is the standard voltage tolerance for residential distribution?",
+      "expected_keywords": ["voltage", "tolerance", "percent", "ANSI", "120V", "service"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-007",
+      "question": "What steps are required to restore power after a feeder trip?",
+      "expected_keywords": ["restore", "feeder", "switching", "patrol", "fault", "recloser"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-008",
+      "question": "Explain the grounding requirements for padmount transformer installations.",
+      "expected_keywords": ["grounding", "padmount", "ground rod", "resistance", "ohms", "mesh"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-009",
+      "question": "What are the vegetation management clearance requirements near high-voltage lines?",
+      "expected_keywords": ["vegetation", "clearance", "trim", "distance", "growth", "cycle"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-010",
+      "question": "How should underground cable faults be localised?",
+      "expected_keywords": ["cable fault", "TDR", "thumper", "localise", "underground", "test"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-011",
+      "question": "What is the maximum allowable ground resistance for a substation grounding grid?",
+      "expected_keywords": ["ground resistance", "ohms", "substation", "grid", "IEEE", "step potential"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-012",
+      "question": "Describe the procedure for switching a distribution circuit under load.",
+      "expected_keywords": ["switching", "load", "sequence", "open", "close", "verify"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-013",
+      "question": "What are the requirements for arc flash hazard labelling on equipment?",
+      "expected_keywords": ["arc flash", "label", "calories", "boundary", "NFPA 70E", "incident energy"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-014",
+      "question": "How often should circuit breakers in substations be tested?",
+      "expected_keywords": ["circuit breaker", "test", "interval", "contact resistance", "timing"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-015",
+      "question": "What is the procedure for reporting and classifying power outages?",
+      "expected_keywords": ["outage", "report", "classify", "SAIDI", "SAIFI", "customer"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-016",
+      "question": "Explain the safety requirements for working near downed power lines.",
+      "expected_keywords": ["downed", "line", "distance", "energised", "danger", "first responder"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-017",
+      "question": "What maintenance is required for oil-filled circuit breakers?",
+      "expected_keywords": ["oil", "circuit breaker", "dielectric", "test", "filter", "maintenance"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-018",
+      "question": "How should capacitor banks be safely de-energised for maintenance?",
+      "expected_keywords": ["capacitor", "discharge", "time", "residual", "voltage", "ground"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-019",
+      "question": "What are the OSHA requirements for electrical safety in the workplace?",
+      "expected_keywords": ["OSHA", "electrical", "safety", "1910", "qualified", "training"],
+      "expected_source_files": [],
+      "domain_tag": "compliance",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-020",
+      "question": "Describe the process for insulation resistance testing of power cables.",
+      "expected_keywords": ["insulation", "resistance", "megger", "megohm", "cable", "test voltage"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-021",
+      "question": "What protective relay settings are typical for distribution feeder protection?",
+      "expected_keywords": ["relay", "overcurrent", "setting", "pickup", "time", "coordination"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-022",
+      "question": "How is power factor correction implemented on distribution feeders?",
+      "expected_keywords": ["power factor", "capacitor", "correction", "kVAR", "switching"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-023",
+      "question": "What are the requirements for pole inspection and replacement programmes?",
+      "expected_keywords": ["pole", "inspection", "replacement", "test", "decay", "strength"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-024",
+      "question": "Describe the storm restoration process and crew deployment strategy.",
+      "expected_keywords": ["storm", "restoration", "crew", "mutual aid", "priority", "critical"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-025",
+      "question": "What electrical hazards exist when working in confined spaces at substations?",
+      "expected_keywords": ["confined space", "hazard", "ventilation", "gas", "entry permit"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-026",
+      "question": "How should smart meter data be used to detect theft or tampering?",
+      "expected_keywords": ["smart meter", "theft", "tamper", "AMI", "anomaly", "revenue"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-027",
+      "question": "What are the environmental regulations for transformer oil spill containment?",
+      "expected_keywords": ["oil", "spill", "containment", "PCB", "EPA", "secondary"],
+      "expected_source_files": [],
+      "domain_tag": "compliance",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-028",
+      "question": "Explain the procedure for performing a hot stick operation on overhead lines.",
+      "expected_keywords": ["hot stick", "live line", "overhead", "insulated", "tool", "procedure"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-029",
+      "question": "What is the recommended maintenance schedule for SCADA communication equipment?",
+      "expected_keywords": ["SCADA", "communication", "maintenance", "RTU", "test", "battery"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-030",
+      "question": "How should fault current calculations be performed for distribution systems?",
+      "expected_keywords": ["fault current", "calculation", "impedance", "short circuit", "symmetrical"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-031",
+      "question": "What training requirements exist for lineworkers performing live-line work?",
+      "expected_keywords": ["training", "lineworker", "live line", "certification", "apprentice"],
+      "expected_source_files": [],
+      "domain_tag": "compliance",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-032",
+      "question": "Describe the steps to commission a new distribution substation.",
+      "expected_keywords": ["commission", "substation", "test", "energise", "inspection", "checklist"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-033",
+      "question": "What are the safety requirements for helicopter line patrol operations?",
+      "expected_keywords": ["helicopter", "patrol", "safety", "clearance", "altitude", "inspection"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-034",
+      "question": "How should lightning arresters be tested and maintained?",
+      "expected_keywords": ["arrester", "lightning", "test", "leakage", "MOV", "replace"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-035",
+      "question": "What load management strategies exist during peak demand periods?",
+      "expected_keywords": ["load", "management", "peak", "demand response", "curtailment", "shedding"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-036",
+      "question": "Explain the process for investigating the root cause of a transformer failure.",
+      "expected_keywords": ["root cause", "transformer", "failure", "investigation", "analysis", "forensic"],
+      "expected_source_files": [],
+      "domain_tag": "maintenance",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-037",
+      "question": "What cybersecurity requirements apply to grid SCADA systems?",
+      "expected_keywords": ["cybersecurity", "SCADA", "NERC CIP", "access control", "patch"],
+      "expected_source_files": [],
+      "domain_tag": "compliance",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "EVAL-038",
+      "question": "How are distribution system losses calculated and reduced?",
+      "expected_keywords": ["loss", "technical", "non-technical", "I2R", "reduction", "efficiency"],
+      "expected_source_files": [],
+      "domain_tag": "operations",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "EVAL-039",
+      "question": "What are the first aid procedures for electrical shock and burns?",
+      "expected_keywords": ["first aid", "shock", "burn", "CPR", "emergency", "medical"],
+      "expected_source_files": [],
+      "domain_tag": "safety",
+      "difficulty": "basic"
+    },
+    {
+      "id": "EVAL-040",
+      "question": "Describe the interconnection requirements for distributed generation on the grid.",
+      "expected_keywords": ["interconnection", "distributed generation", "IEEE 1547", "inverter", "anti-islanding"],
+      "expected_source_files": [],
+      "domain_tag": "compliance",
+      "difficulty": "advanced"
+    }
+  ]
+}
