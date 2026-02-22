@@ -14,24 +14,23 @@ A production-structured Retrieval-Augmented Generation (RAG) system for electric
 
 ---
 
-## Table of Contents
 
-1. [Architecture Overview](#architecture-overview)
-2. [RAG Pipeline](#rag-pipeline)
-3. [Guardrail Design](#guardrail-design)
-4. [Evaluation Framework](#evaluation-framework)
-5. [Structured Logging](#structured-logging)
-6. [Project Structure](#project-structure)
-7. [Setup & Running](#setup--running)
-8. [Deployment to Hugging Face Spaces](#deployment-to-hugging-face-spaces)
-9. [Migrating to Azure OpenAI](#migrating-to-azure-openai)
-10. [Enterprise Considerations](#enterprise-considerations)
+# ⚡ Grid QA & Decision Support Assistant
+
+**Live Demo:** [Try the Gradio RAG Assistant here!](https://huggingface.co/spaces/nashid16/grid-qa-assistant)
+
+## What is this?
+I built this project because I wanted to explore how we can use LLMs safely in high-stakes environments. If you ask ChatGPT a question about grid maintenance, and it hallucinates a power rating, the results could be catastrophic. **Grid QA** is my attempt at solving that problem.
+
+It's a production-grade Retrieval-Augmented Generation (RAG) system built specifically for electricity distribution operations. It ingests thousands of pages of dense technical manuals and allows operators to query them safely. The core focus here isn't just about getting an answer; it's about getting a *grounded* answer with strict citations, safety guardrails, and no hallucinations.
 
 ---
 
-## Architecture Overview
+## 🏗️ How it's Built (The Architecture)
 
-```
+I designed the pipeline to be modular, prioritizing security and predictability at every step:
+
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         GRADIO UI (app.py)                          │
 │   Query Tab  │  Upload Tab  │  Logs Tab                             │
@@ -86,64 +85,77 @@ A production-structured Retrieval-Augmented Generation (RAG) system for electric
 └──────────────┘
 ```
 
-The system follows a linear pipeline: user query → input validation → vector retrieval → prompt construction → LLM synthesis → output validation → response. Every stage is a separate module with no cross-cutting dependencies beyond explicit imports.
+### 1. Ingestion & Vector Search (`rag/ingest.py`, `rag/index.py`, `rag/retrieve.py`)
+Instead of relying on an expensive cloud vector database, I wanted to keep this self-contained. The system parses PDF and text manuals, chunks them with overlapping boundaries so context isn't lost, and assigns deterministic SHA-256 chunk IDs. It then embeds everything locally using `sentence-transformers` and stores the vectors in a highly efficient **FAISS IndexFlatIP** database.
 
-## RAG Pipeline
+### 2. Multi-Layer Guardrails (`rag/guardrails.py`)
+This is the most critical part of the system.
+* **Input side:** Before the LLM even sees a prompt, the system checks for prompt injections, filters out any Personal Identifiable Information (PII) using regex/patterns, and enforces a strict grid-operations domain allowlist.
+* **Output side:** The system parses the LLM's response before showing it to the user. It explicitly verifies that the LLM has included citations in the exact format `[Source: document.pdf, Page N]`, preventing ungrounded claims.
 
-### Ingestion (`rag/ingest.py`)
+### 3. The LLM Call (`rag/llm_gemini.py`)
+I used the Gemini API and tuned the temperature way down to `0.1`. The system prompt is incredibly strict, essentially telling the model: *"If you cannot find the answer in the retrieved context, you must refuse to answer."*
 
-Documents are loaded from `data/docs/` using format-specific readers. PDF extraction uses `pypdf`; plain text and Markdown are read directly. Each document is split into overlapping word-boundary chunks (default: 512 words, 64-word overlap) to preserve context across boundaries.
+### 4. Evaluation Framework (`rag/evaluation.py`)
+You can't improve what you don't measure. I built a testing suite that measures **retrieval hit rate**, **keyword recall**, and **citation correctness** against a dataset of complex operational questions, acting as a unit test for the LLM pipeline itself.
 
-Every chunk receives a deterministic ID computed as a truncated SHA-256 hash of `source_file|page|chunk_index|text_prefix`. This ensures that re-ingesting the same document produces identical IDs, enabling safe deduplication and incremental updates.
+---
 
-Metadata attached to each chunk includes: source filename, page number (PDF only), best-effort section heading detection via regex, character offsets, and a word-count token estimate.
+## 💻 Tech Stack
+* **Python**
+* **Gemini 1.5 Flash API** (Generation)
+* **FAISS & Sentence-Transformers** (Retrieval & Local Embedding)
+* **Gradio** (Frontend Interface)
+* **Regex/Pydantic** (Guardrails and validation)
 
-The full chunk manifest is persisted as `data/cache/chunks.json` so that the system can reload without re-processing documents.
+---
 
-### Embedding & Indexing (`rag/index.py`)
+## 🚀 Running it Locally
 
-Text chunks are encoded using `sentence-transformers/all-MiniLM-L6-v2`, a 384-dimension model that runs efficiently on CPU. The encoder is loaded as a process-global singleton to avoid repeated model initialization.
+If you want to spin this up yourself, it's pretty straightforward.
 
-All vectors are L2-normalised before insertion into a FAISS `IndexFlatIP` index. This means inner-product search computes cosine similarity — the standard metric for semantic text similarity. The index and its ID mapping are saved to disk (`data/cache/faiss.index`, `data/cache/id_map.json`) and loaded on subsequent startups without recomputation.
+1.  **Clone and Install dependencies:**
+    ```bash
+    git clone https://github.com/Nashid-Noor/Grid-Knowledge-Decision-Support-Assistant.git
+    cd Grid-Knowledge-Decision-Support-Assistant
+    pip install -r requirements.txt
+    ```
 
-### Retrieval (`rag/retrieve.py`)
+2.  **Add your Gemini API Key:**
+    Create a `.env` file in the root directory and add:
+    ```env
+    GEMINI_API_KEY=your_key_here
+    ```
 
-At query time, the user question is embedded with the same model, normalised, and searched against the FAISS index. Two filtering controls are exposed:
+3.  **Start the App:**
+    ```bash
+    python app.py
+    ```
+    *The app will be available in your browser at `http://localhost:7860`.*
 
-- **Top-K** (default 5): Maximum number of passages returned.
-- **Score threshold** (default 0.25): Minimum cosine similarity to include a passage. This filters out low-relevance noise that would confuse the LLM.
+---
 
-A heuristic confidence score (0–1) is computed from the top retrieval score, the average score across returned passages, and the count of qualifying passages. This is displayed to the user as a colour-coded badge.
+## 📂 Project Structure
 
-### Prompt Construction (`rag/prompt.py`)
-
-The system prompt enforces strict grounding: the LLM must answer only from the provided context, cite every claim using `[Source: filename, Page N]` format, and produce a standard refusal if context is insufficient.
-
-Retrieved passages are formatted into a numbered CONTEXT block with metadata headers (source, page, section, relevance score) injected directly into the user message.
-
-### LLM Synthesis (`rag/llm_gemini.py`)
-
-The Gemini 1.5 Flash model is called with temperature 0.1 and a 1024-token output cap. Low temperature minimises creative drift — critical in a safety-oriented domain where fabricated procedures could cause physical harm.
-
-After generation, output guardrails validate that citations are present and that the model did not hallucinate source references.
-
-## Guardrail Design
-
-Guardrails are consolidated in `rag/guardrails.py` and operate in two layers.
-
-### Input Guardrails (run before retrieval)
-
-| Check | Method | Action |
-|---|---|---|
-| **Prompt injection** | 14 regex patterns covering instruction override, role hijacking, system probing, and token injection | Block query, log to security log |
-| **System prompt override** | Subset of injection patterns targeting system/admin prompt extraction | Block query, log as `system_override` |
-| **PII detection** | Regex patterns for SSN, email, phone, credit card, IP address, date of birth, passport numbers | Block query, log redacted version |
-| **Domain enforcement** | Keyword allowlist (~50 terms covering grid operations vocabulary) | Block query, inform user of scope |
-| **Empty query** | Whitespace/length check | Block with message |
-
-Checks run in priority order: injection → PII → domain → proceed. This ensures that a query containing both an injection attempt and PII is classified as injection (the higher-severity threat).
-
-PII detection includes a safelist for common technical IP addresses (127.0.0.1, 192.168.x.x) that appear frequently in infrastructure documentation.
+```text
+grid-qa/
+├── app.py                  # Gradio UI & main application orchestration
+├── data/
+│   ├── raw/                # Dump PDF/TXT technical safety manuals here
+│   ├── index/              # Where the FAISS index and chunk manifest are saved
+│   └── logs/               # JSON-lines structured event logs
+├── rag/                    # The brain of the application
+│   ├── evaluation.py       # Metrics testing framework
+│   ├── guardrails.py       # Input/Output security validation
+│   ├── index.py            # Local FAISS embedding wrapper
+│   ├── ingest.py           # Document parsing & chunking engine
+│   ├── llm_gemini.py       # Interfacing with the Gemini API
+│   ├── logger.py           # Structured event logger
+│   ├── prompt.py           # Prompt assembler handling system context
+│   └── retrieve.py         # FAISS nearest-neighbor semantic search
+├── tests/                  # Scripts for hitting edge cases (test_guardrail.py, etc.)
+└── requirements.txt
+```
 
 ### Output Guardrails (run after LLM generation)
 
