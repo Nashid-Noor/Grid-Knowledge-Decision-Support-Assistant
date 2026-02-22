@@ -1,0 +1,3 @@
+{"timestamp": "2026-02-21T17:58:31.478311+00:00", "event": "startup", "status": "✅ Gemini configured | ⚠️ No documents in data/docs. Upload PDFs or text files.", "chunk_count": 0, "index_cached": false}
+{"timestamp": "2026-02-21T17:59:20.721278+00:00", "event": "startup", "status": "✅ Gemini configured | ⚠️ No documents in data/docs. Upload PDFs or text files.", "chunk_count": 0, "index_cached": false}
+{"timestamp": "2026-02-21T18:00:07.432042+00:00", "event": "startup", "status": "✅ Gemini configured | ⚠️ No documents in data/docs. Upload PDFs or text files.", "chunk_count": 0, "index_cached": false}
