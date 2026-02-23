@@ -6,7 +6,7 @@
 ## What is this?
 I built this project because I wanted to explore how we can use LLMs safely in high-stakes environments. If you ask ChatGPT a question about grid maintenance, and it hallucinates a power rating, the results could be catastrophic. **Grid QA** is my attempt at solving that problem.
 
-It's a production-grade Retrieval-Augmented Generation (RAG) system built specifically for electricity distribution operations. It ingests thousands of pages of dense technical manuals and allows operators to query them safely. The core focus here isn't just about getting an answer; it's about getting a *grounded* answer with strict citations, safety guardrails, and no hallucinations.
+It's a production-grade Retrieval-Augmented Generation (RAG) system built specifically for electricity distribution operations. It ingests thousands of pages of dense technical manuals and allows operators to query them safely. The core focus here isn't just about getting an answer, it's about getting a *grounded* answer with strict citations, safety guardrails, and no hallucinations.
 
 ---
 
